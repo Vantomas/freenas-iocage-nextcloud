@@ -1,0 +1,33 @@
+{
+	# debug
+	acme_ca https://acme-staging-v02.api.letsencrypt.org/directory
+	email youremailhere
+	# default_sni yourhostnamehere
+}
+
+yourhostnamehere {
+	gzip {
+		level 3
+	}
+
+	proxy / 10.88.62.141:80 {
+		transparent
+		websocket
+	}
+
+	log {
+		output file /var/log/yourhostnamehere.log
+		format single_field common_log
+	}
+
+	header {
+		# enable HSTS
+		Strict-Transport-Security max-age=31536000;
+	}
+
+	# client support (e.g. os x calendar / contacts)
+	redir /.well-known/carddav /remote.php/dav 301
+	redir /.well-known/caldav /remote.php/dav 301
+	redir /.well-known/webfinger /index.php/.well-known/webfinger 301
+	redir /.well-known/nodeinfo /index.php/.well-known/nodeinfo 301
+}
